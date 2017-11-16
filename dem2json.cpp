@@ -107,7 +107,7 @@ int main(int argc, char **argv) {
 
 	fclose(data);
 
-	for (size_t zoom = 0; zoom <= 5; zoom++) {
+	for (size_t zoom = 0; zoom <= 9; zoom++) {
 		size_t increment = 3 * (1 << (9 - zoom));
 
 		for (size_t y = 0; y < nrows; y += increment) {
