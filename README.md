@@ -12,8 +12,11 @@ Tile the world
 --------------
 
 ```
-make
-for i in dds.cr.usgs.gov/srtm/version2_1/SRTM30/[ew]*[ns]*; do ./dem2json <(unzip -p $i/$(basename $i).hdr.zip) <(unzip -p $i/$(basename $i).dem.zip); done | time tippecanoe -P -r1 -z9 -f -o srtm.mbtiles
+$ make
+$ for i in dds.cr.usgs.gov/srtm/version2_1/SRTM30/[ew]*[ns]*; do ./dem2json <(unzip -p $i/$(basename $i).hdr.zip) <(unzip -p $i/$(basename $i).dem.zip); done | time tippecanoe -P -r1 -z9 -f -o srtm.mbtiles
+115201710 features, 2135447250 bytes of geometry, 4 bytes of separate metadata, 140594 bytes of string pool
+  99.9%  9/432/153
+     3789.21 real      9566.32 user       532.21 sys
 ```
 
 What the GeoJSON looks like

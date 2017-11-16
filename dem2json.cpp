@@ -110,13 +110,13 @@ int main(int argc, char **argv) {
 	for (size_t zoom = 0; zoom <= 9; zoom++) {
 		size_t increment = 3 * (1 << (9 - zoom));
 
-		for (size_t y = 0; y < nrows; y += increment) {
-			for (size_t x = 0; x < ncols; x += increment) {
+		for (size_t y = 0; y + increment - 1 < nrows; y += increment) {
+			for (size_t x = 0; x + increment - 1 < ncols; x += increment) {
 				double sum = 0;
 				size_t count = 0;
 
-				for (size_t xx = x; xx < x + increment; xx++) {
-					for (size_t yy = y; yy < y + increment; yy++) {
+				for (size_t xx = x; xx < x + increment && xx < ncols; xx++) {
+					for (size_t yy = y; yy < y + increment && yy < nrows; yy++) {
 						if (vals[y][x] != nodata) {
 							sum += vals[y][x];
 							count++;
@@ -126,7 +126,7 @@ int main(int argc, char **argv) {
 
 				if (count > 0) {
 					printf("{\"type\": \"Feature\", \"properties\":{\"elevation\":%f}, \"tippecanoe\":{\"minzoom\":%zu, \"maxzoom\": %zu}, \"geometry\": {\"type\": \"Point\", \"coordinates\" : [ %f, %f ] } }\n",
-					       sum / count, zoom, zoom, ulxmap + x * xdim, ulymap - y * ydim);
+					       sum / count, zoom, zoom, ulxmap + (x + increment * .5) * xdim, ulymap - (y + increment * .5) * ydim);
 				}
 			}
 		}
