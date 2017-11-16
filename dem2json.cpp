@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 #include <ctype.h>
 #include <vector>
 #include <string>
@@ -108,25 +109,27 @@ int main(int argc, char **argv) {
 	fclose(data);
 
 	for (size_t zoom = 0; zoom <= 9; zoom++) {
-		size_t increment = 3 * (1 << (9 - zoom));
+		double deg = 0.025 * (1 << (9 - zoom));
+		size_t xslices = round(ncols * xdim / deg);
+		size_t yslices = round(nrows * ydim / deg);
 
-		for (size_t y = 0; y + increment - 1 < nrows; y += increment) {
-			for (size_t x = 0; x + increment - 1 < ncols; x += increment) {
+		for (size_t y = 0; y < yslices; y++) {
+			for (size_t x = 0; x < xslices; x++) {
 				double sum = 0;
 				size_t count = 0;
 
-				for (size_t xx = x; xx < x + increment && xx < ncols; xx++) {
-					for (size_t yy = y; yy < y + increment && yy < nrows; yy++) {
-						if (vals[y][x] != nodata) {
-							sum += vals[y][x];
+				for (size_t xx = x * ncols / xslices; xx < (x + 1) * ncols / xslices; xx++) {
+					for (size_t yy = y * nrows / yslices; yy < (y + 1) * nrows / yslices; yy++) {
+						if (vals[yy][xx] != nodata) {
+							sum += vals[yy][xx];
 							count++;
 						}
 					}
 				}
 
 				if (count > 0) {
-					printf("{\"type\": \"Feature\", \"properties\":{\"elevation\":%f}, \"tippecanoe\":{\"minzoom\":%zu, \"maxzoom\": %zu}, \"geometry\": {\"type\": \"Point\", \"coordinates\" : [ %f, %f ] } }\n",
-					       sum / count, zoom, zoom, ulxmap + (x + increment * .5) * xdim, ulymap - (y + increment * .5) * ydim);
+					printf("{\"type\": \"Feature\", \"properties\":{\"elevation\":%d}, \"tippecanoe\":{\"minzoom\":%zu, \"maxzoom\": %zu}, \"geometry\": {\"type\": \"Point\", \"coordinates\" : [ %f, %f ] } }\n",
+					       (int) (sum / count), zoom, zoom, ulxmap + (x + .5) / xslices * ncols * xdim, ulymap - ((y + .5) / yslices * nrows * ydim));
 				}
 			}
 		}
