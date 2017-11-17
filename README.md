@@ -6,7 +6,7 @@ Makes vector tiles of gridded worldwide elevation data
 Source data
 -----------
 
-[SRTM30](https://dds.cr.usgs.gov/srtm/version2_1/SRTM30/srtm30_documentation.pdf): 30-meter SRTM elevation data, with voids filled by USGS 30-meter topography
+[SRTM30](https://dds.cr.usgs.gov/srtm/version2_1/SRTM30/srtm30_documentation.pdf): 30-arc-second SRTM elevation data, with voids filled by USGS 30-arc-second topography
 
 ```
 wget -m -np https://dds.cr.usgs.gov/srtm/version2_1/SRTM30/
@@ -28,7 +28,7 @@ What the GeoJSON looks like
 ---------------------------
 
 It is represented as points with ~0.025 degree spacing at zoom level 9,
-with progressively smaller spacing at lower zooms.
+with progressively larger spacing at lower zooms.
 
 Each point looks like this:
 
